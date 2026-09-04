@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101217">
+  <meta name="description" content="GitHub Actions sonuçlarını incele. Başarısız çalıştırmayı, ilgili işi ve test adımını bul. Açık depolar için salt okunur takip paneli.">
+  <title>ActionWatch — GitHub Actions Takibi</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="ActionWatch ana sayfa"><span class="brand-symbol" aria-hidden="true">↳</span>Action<span>Watch</span></a><span class="topbar-label">GITHUB ACTIONS TAKİBİ</span><a href="/download/action-watch-source.zip" download class="source-link">Kaynak kodu ↗</a></header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">ÇALIŞTIRMA MERKEZİ</p><h1>Testler geçti mi?</h1><p>Son sonucu gör. Başarısız adımın izini sür.</p></div><span class="read-only">Salt okunur</span></div>
+    <section class="connect-panel" aria-labelledby="connect-title">
+      <h2 id="connect-title" class="sr-only">GitHub deposu seç</h2>
+      <form id="repo-form"><label for="repo-input">Açık GitHub deposu</label><div class="repo-fields"><span class="repo-prefix" aria-hidden="true">github.com /</span><input id="repo-input" name="repository" value="busrabuseucar/csv-doctor" placeholder="kullanıcı/depo" maxlength="240" autocomplete="off" spellcheck="false" required><button id="load-button" type="submit" class="primary">GitHub’dan getir <span aria-hidden="true">↗</span></button><button id="sample-button" type="button" class="secondary">Örnek modu aç</button></div></form>
+      <div class="quick-repos"><span>Projelerin:</span><button type="button" data-repo="busrabuseucar/loglens">LogLens</button><button type="button" data-repo="busrabuseucar/Ministock">MiniStock</button><button type="button" data-repo="busrabuseucar/csv-doctor">CSV Doctor</button><span class="token-note">Şifre veya erişim anahtarı gerekmez.</span></div>
+    </section>
+    <p id="status" role="status" aria-live="polite" class="status"></p>
+    <div id="error" role="alert" class="error-banner" hidden><div><strong>Veri alınamadı</strong><p id="error-message"></p></div><button type="button" id="retry-button" class="secondary">Tekrar dene</button></div>
+    <div id="dashboard">
+      <section class="repo-overview" aria-label="Depo özeti"><div class="repo-title"><div><span id="mode-badge" class="mode-badge">ÖRNEK VERİ</span><h2 id="repo-name">demo/checkout-api</h2><p id="snapshot-time">Kurgusal çalıştırmalar · canlı veri değildir.</p></div><button id="refresh-button" type="button" class="secondary" disabled>Yenile ↻</button></div><div class="stats"><div><p>Başarı oranı</p><strong id="success-rate">—</strong><span id="rate-detail"></span></div><div><p>Başarılı</p><strong id="success-count" class="text-success">—</strong><span>Tamamlanan çalıştırma</span></div><div><p>Başarısız</p><strong id="failure-count" class="text-failure">—</strong><span>İncelenmesi gereken</span></div><div><p>Devam eden</p><strong id="active-count" class="text-active">—</strong><span>Çalışan veya bekleyen</span></div></div></section>
+      <div id="sample-lesson" class="sample-lesson"><span class="lesson-label">ÖRNEK SENARYO</span><p>İptal edilen bir işi başarı sayan hatayı yakala.</p><div><button id="lesson-before" type="button">#47 · Test başarısız</button><span aria-hidden="true">→</span><button id="lesson-after" type="button">#48 · Düzeltme sonrası</button></div></div>
+      <div class="content-grid">
+        <section class="runs-panel" aria-labelledby="runs-title"><div class="panel-heading"><h2 id="runs-title">Son çalıştırmalar</h2><span id="run-count" class="muted"></span></div><div class="filters"><label for="group-filter">Sonuç<select id="group-filter"><option value="all">Tümü</option><option value="failure">Başarısız</option><option value="success">Başarılı</option><option value="active">Devam eden</option><option value="other">Diğer</option></select></label><label for="workflow-filter">İş akışı<select id="workflow-filter"><option value="">Tümü</option></select></label><label for="branch-filter">Dal<select id="branch-filter"><option value="">Tümü</option></select></label></div><div id="run-list" class="run-list"></div><p id="list-footnote" class="list-footnote"></p></section>
+        <section class="detail-panel" aria-labelledby="detail-title" id="detail-panel"><div class="panel-heading"><h2 id="detail-title" tabindex="-1">Çalıştırma ayrıntısı</h2><span id="detail-number" class="mono muted"></span></div><div id="detail-content" class="detail-content"><p class="empty">Adımları incelemek için bir çalıştırma seç.</p></div></section>
+      </div>
+      <details class="method-note"><summary>Bu sayılar nasıl hesaplanıyor?</summary><p>Özet, filtrelerden bağımsız olarak alınan son 30 kaydı esas alır. Başarı oranı = başarılı / (başarılı + başarısız). Süre aşımı ve işlem gerektiren sonuçlar başarısız grubundadır. İptal, atlanan, nötr ve bilinmeyen sonuçlar orana dahil edilmez. Bu değer tüm depo geçmişinin veya kod kalitesinin ölçümü değildir.</p><p>İş süreleri GitHub’ın başlangıç ve bitiş zamanlarından hesaplanır. Ham loglar bu panelde indirilmez; ayrıntılar için ilgili GitHub bağlantısını açabilirsin.</p></details>
+    </div>
+    <footer><span>Büşra Buse Uçar · ActionWatch</span><span id="api-budget">Örnek modunda GitHub isteği yapılmaz.</span></footer>
+    <noscript><p class="error-banner">ActionWatch için JavaScript açık olmalı.</p></noscript>
+  </main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+name: CI learning lab
+run-name: CI lab · ${{ inputs.scenario }}
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: broken deliberately fails; fixed passes
+        type: choice
+        required: true
+        default: fixed
+        options:
+          - broken
+          - fixed
+permissions:
+  contents: read
+jobs:
+  status-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test cancelled status handling
+        env:
+          SCENARIO: ${{ inputs.scenario }}
+        run: node examples/ci-lab.mjs

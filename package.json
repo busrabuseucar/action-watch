@@ -1,0 +1,17 @@
+{
+  "name":"action-watch",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "description":"Read-only GitHub Actions dashboard with an explicit sample mode.",
+  "engines":{"node":">=24"},
+  "scripts":{
+    "build":"node scripts/build.mjs",
+    "check":"tsc --noEmit",
+    "test":"node --test tests/*.test.mjs",
+    "source":"python3 scripts/package-source.py",
+    "start":"python3 -m http.server 8080 --bind 127.0.0.1 --directory dist"
+  },
+  "devDependencies":{"typescript":"5.9.3"},
+  "license":"MIT"
+}
