@@ -59,3 +59,9 @@ test('a slow request becomes a timeout without a retry storm',async()=>{
 test('oversized responses fail before JSON normalization',async()=>{
   const client=new GitHubClient(async()=>new Response(' '.repeat(4*1024*1024+1)));await assert.rejects(client.runs(repo),{kind:'data'});
 });
+
+test('out-of-range quota headers never expose invalid dates to the interface',async()=>{
+  const client=new GitHubClient(async()=>jsonResponse({}, {status:429,headers:{'x-ratelimit-remaining':'9'.repeat(400),'x-ratelimit-reset':'9'.repeat(400),'retry-after':'9'.repeat(400)}}));
+  await assert.rejects(()=>client.runs(repo),error=>error.kind==='rate-limit'&&error.retryAt===null);
+  assert.deepEqual(client.rate,{remaining:null,resetAt:null});
+});

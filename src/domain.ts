@@ -35,7 +35,10 @@ function integer(value:unknown, positive=false):number {
 }
 function str(value:unknown,fallback='—',max=240):string { return typeof value==='string' && value.length ? value.slice(0,max) : fallback; }
 function date(value:unknown,required=false):string|null {
-  if (typeof value==='string' && /^\d{4}-\d{2}-\d{2}T/.test(value) && Number.isFinite(Date.parse(value))) return value;
+  if (typeof value==='string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(value)) {
+    const parsed = new Date(value);
+    if (Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0,19) === value.slice(0,19)) return value;
+  }
   if (required) throw new DataError('GitHub yanıtındaki tarih geçersiz.');
   return null;
 }
@@ -73,9 +76,9 @@ export function groupOf(run:Pick<Run,'status'|'conclusion'>):RunGroup {
 }
 export function statusLabel(run:Pick<Run,'status'|'conclusion'>):string {
   const states:Record<string,string>={queued:'Sırada',in_progress:'Çalışıyor',waiting:'Onay bekliyor',pending:'Bekliyor',requested:'İstendi'};
-  if(run.status!=='completed') return states[run.status] ?? 'Bilinmeyen durum';
+  if(run.status!=='completed') return Object.hasOwn(states,run.status) ? states[run.status]! : 'Bilinmeyen durum';
   const results:Record<string,string>={success:'Başarılı',failure:'Başarısız',timed_out:'Süre aşıldı',action_required:'İşlem gerekli',startup_failure:'Başlatılamadı',cancelled:'İptal edildi',skipped:'Atlandı',neutral:'Nötr',stale:'Süresi geçti'};
-  return results[run.conclusion??''] ?? 'Sonuç bilinmiyor';
+  return Object.hasOwn(results,run.conclusion??'') ? results[run.conclusion!]! : 'Sonuç bilinmiyor';
 }
 export function filterRuns(runs:Run[],filter:Filter):Run[] {
   return runs.filter(r=>(filter.group==='all'||groupOf(r)===filter.group) && (!filter.workflow||String(r.workflowId)===filter.workflow) && (!filter.branch||r.branch===filter.branch));

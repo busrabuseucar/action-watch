@@ -6,6 +6,13 @@ export class ApiError extends Error {
 }
 type CacheEntry={data:unknown;time:number};
 type Fetcher=(input:string,init?:RequestInit)=>Promise<Response>;
+function validTime(value:number):number|null {
+  return Number.isFinite(new Date(value).getTime()) ? value : null;
+}
+function unsigned(value:string|null):number|null {
+  const number=value!==null&&/^\d+$/.test(value)?Number(value):NaN;
+  return Number.isSafeInteger(number)?number:null;
+}
 export class GitHubClient {
   private cache=new Map<string,CacheEntry>();
   public rate:{remaining:number|null;resetAt:number|null}={remaining:null,resetAt:null};
@@ -20,10 +27,12 @@ export class GitHubClient {
     try {
       const response=await this.fetcher(`https://api.github.com${path}`,{method:'GET',headers:{Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2026-03-10'},credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});
       const remaining=response.headers.get('x-ratelimit-remaining'),reset=response.headers.get('x-ratelimit-reset');
-      this.rate={remaining:remaining!==null&&/^\d+$/.test(remaining)?Number(remaining):null,resetAt:reset!==null&&/^\d+$/.test(reset)?Number(reset)*1000:null};
+      const resetSeconds=unsigned(reset);
+      this.rate={remaining:unsigned(remaining),resetAt:resetSeconds===null?null:validTime(resetSeconds*1000)};
       if(!response.ok) {
         const retry=response.headers.get('retry-after');
-        const retryAt=retry&&/^\d+$/.test(retry)?this.now()+Number(retry)*1000:retry&&Number.isFinite(Date.parse(retry))?Date.parse(retry):this.rate.resetAt;
+        const retrySeconds=unsigned(retry);
+        const retryAt=(retrySeconds!==null?validTime(this.now()+retrySeconds*1000):retry?validTime(Date.parse(retry)):null)??this.rate.resetAt;
         if(response.status===429||(response.status===403&&(this.rate.remaining===0||retry!==null))) throw new ApiError('rate-limit','GitHub istek sınırına ulaşıldı. Bir süre sonra tekrar dene veya örnek modu aç.',retryAt);
         if(response.status===404) throw new ApiError('not-found','Depo bulunamadı veya herkese açık değil. Kullanıcı ve depo adını kontrol et.');
         if(response.status===403||response.status===401) throw new ApiError('forbidden','GitHub bu isteğe izin vermedi. Depo erişimini kontrol et veya daha sonra tekrar dene.');

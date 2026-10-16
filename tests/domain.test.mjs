@@ -70,3 +70,16 @@ test('switching requests aborts the older selection and prevents stale rendering
 test('switching to sample mode invalidates an in-flight live response',()=>{
   const latest=new LatestRequest(),ticket=latest.begin();latest.cancel();assert.equal(latest.current(ticket),false);assert.equal(ticket.signal.aborted,true);
 });
+
+test('invalid calendar dates and missing UTC markers are rejected',()=>{
+  for(const created_at of ['2026-02-30T10:00:00Z','2026-09-04T24:00:00Z','2026-09-04T10:00:00'])
+    assert.throws(()=>normalize(rawRun({created_at})));
+  assert.equal(normalize(rawRun({created_at:'2024-02-29T10:00:00.123Z'}))[0].createdAt,'2024-02-29T10:00:00.123Z');
+  assert.equal(normalize(rawRun({run_started_at:'2026-02-30T10:00:00Z'}))[0].startedAt,null);
+});
+test('prototype property names are unknown status labels',()=>{
+  for(const key of ['constructor','toString','__proto__']) {
+    assert.equal(statusLabel({status:key,conclusion:null}),'Bilinmeyen durum');
+    assert.equal(statusLabel({status:'completed',conclusion:key}),'Sonuç bilinmiyor');
+  }
+});

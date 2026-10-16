@@ -22,7 +22,7 @@ The app starts in **sample mode** with no GitHub requests. Choose one of the pro
 
 ## Local setup
 
-Requirements: **Node.js 24+**, npm, Python 3.10+, and a current browser. TypeScript 5.9.3 is pinned as the sole development dependency; there are no runtime dependencies or API keys.
+Requirements: **Node.js 24+**, npm, Python 3.10+, and a current browser. TypeScript 5.9.3 and Playwright 1.58.2 are pinned development dependencies; there are no runtime dependencies or API keys.
 
 ```bash
 git clone https://github.com/busrabuseucar/action-watch.git
@@ -33,7 +33,7 @@ npm run source
 npm start
 ```
 
-Open **http://localhost:8080**. Stop the local server with Ctrl+C. Serve the built `dist/` directory over HTTP; do not open the HTML directly as a local file. Rebuild after changing TypeScript or public assets. The build clears generated output; regenerate the source ZIP after building.
+Open **http://localhost:8080**. Stop the local server with Ctrl+C. Serve the built `dist/` directory over HTTP; do not open the HTML directly as a local file. Relative asset URLs also support hosting under a subdirectory. Rebuild after changing TypeScript or public assets. The build clears generated output; regenerate the source ZIP after building.
 
 ## How the numbers work
 
@@ -77,13 +77,18 @@ npm run build
 npm test
 npm run source
 node scripts/check-assets.mjs
+python3 -m unittest discover -s tests -p 'test_*.py'
+npx playwright install chromium
+npm run test:browser
 ```
 
-**28 automated tests** cover outcome grouping, percentage denominators, filters, input validation, strict payload normalization, safe links, actual step durations, attempt-specific pagination, truncation, cache expiry, HTTP errors, rate limits, cancellation, stale selection protection, timeouts and oversized responses. Network error cases use injected test responses and do not consume GitHub quota.
+**31 Node tests** cover outcome grouping, percentage denominators, filters, input validation, strict payload normalization, safe links, actual step durations, attempt-specific pagination, truncation, cache expiry, HTTP errors, rate limits, cancellation, stale selection protection, timeouts and oversized responses. Network error cases use injected test responses and do not consume GitHub quota.
 
-The production API client was also run against the live `busrabuseucar/csv-doctor` repository without an authorization token, using the execution environment's network proxy. It successfully read a workflow run and the jobs for its selected attempt. The normalizers were independently checked against real responses obtained through the connected GitHub reader. Browser-based visual and end-to-end testing was not performed for the initial release.
+The production API client was also run against the live `busrabuseucar/csv-doctor` repository without an authorization token, using the execution environment's network proxy. It successfully read a workflow run and the jobs for its selected attempt. The normalizers were independently checked against real responses obtained through the connected GitHub reader. That historical check is separate from the deterministic tests below.
 
-The main GitHub Actions workflow runs dependency installation, strict TypeScript checking, build, tests, source packaging and asset verification after a push. The workflow is configured in source; a remote passing run must be verified after repository upload.
+One Python test checks source packaging against environment files, private data and symlinks. Six Chromium checks (three flows each on desktop and Pixel 7 emulation) exercise subdirectory hosting, sample filtering, success-rate calculations, safe rendering of API text, exact-attempt job requests and explicit recovery from API errors. Browser API responses are mocked; these tests do not verify GitHub availability, live CORS or real-device behavior.
+
+The main GitHub Actions workflow runs dependency installation, strict TypeScript checking, build, Node/Python tests, source packaging, asset verification and Chromium tests after each push. Failed browser runs retain traces as workflow artifacts.
 
 ## CI learning lab
 
@@ -105,12 +110,12 @@ src/session.ts     Cancellation and stale-response protection
 src/sample.ts      Clearly fictional demonstration data
 src/app.ts         Interface state, events and safe rendering
 public/            HTML shell, stylesheet and favicon
-tests/             Deterministic Node tests against compiled modules
+tests/             Node, Python packaging and Chromium integration tests
 examples/          Isolated red/green learning exercise
 scripts/           Build, portable source ZIP and asset checks
 ```
 
-`dist/` and `node_modules/` are generated and ignored by Git. The downloadable source ZIP contains TypeScript, assets, tests, docs and build instructions; it excludes Site identity, dependencies and generated build output. Run the local setup sequence after extracting it.
+`dist/` and `node_modules/` are generated and ignored by Git. The downloadable source ZIP contains TypeScript, assets, tests, docs and build instructions; an explicit path/extension allowlist excludes environment files, private JSON/databases, symlinks, Site identity, dependencies and generated build output. This is not a secret scanner: do not put credentials in allowed source files. Run the local setup sequence after extracting it.
 
 ## Scope and attribution
 
