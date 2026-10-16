@@ -28,7 +28,7 @@ test('live response renders text safely and fetches the selected attempt', async
   await page.route('https://api.github.com/**', async route => {
     requests.push(route.request().url());
     const jobs = route.request().url().includes('/jobs');
-    await route.fulfill({json: jobs ? {total_count: 1, jobs: [rawJob()]} : {total_count: 3, workflow_runs: [rawRun({display_title: title}), rawRun({id:43, conclusion:'failure'}), rawRun({id:44, conclusion:'cancelled'})]}});
+    await route.fulfill({json: jobs ? {total_count: 1, jobs: [rawJob()]} : {total_count: 3, workflow_runs: [rawRun({display_title: title, created_at: '2026-09-05T10:00:00Z'}), rawRun({id:43, conclusion:'failure'}), rawRun({id:44, conclusion:'cancelled'})]}});
   });
   await page.goto('./');
   await page.locator('#repo-input').fill('test/repo');
