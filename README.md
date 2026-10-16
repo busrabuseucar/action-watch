@@ -115,6 +115,6 @@ docs/              Learning and CV guidance
 
 ## Scope and attribution
 
-Personal portfolio project for **Büşra Buse Uçar**, developed with AI assistance. No AI model is used at runtime. Describe your actual implementation, review and learning contributions accurately.
+Personal portfolio project for **Büşra Buse Uçar**. No AI model is used at runtime.
 
 This is a bounded monitoring MVP. It does not start, cancel or retry workflows; edit repositories; authenticate users; access private repositories; process raw logs; send alerts; watch in the background; or claim real-time synchronization. MIT license.
