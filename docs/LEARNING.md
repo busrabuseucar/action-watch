@@ -1,6 +1,6 @@
 # ActionWatch — uygulayarak öğren
 
-Bu projede hedef; bir dış servisten veri okuma, başarısız istekleri yönetme ve yanlış başarı oranı üretmeme davranışlarını açıklayabilmek. Proje yapay zekâ desteğiyle hazırlandı; kendi katkını incelediğin, değiştirdiğin ve doğruladığın iş üzerinden anlat.
+Bu projede hedef; bir dış servisten veri okuma, başarısız istekleri yönetme ve yanlış başarı oranı üretmeme davranışlarını açıklayabilmek. İncelediğin, değiştirdiğin ve doğruladığın davranışları somut örneklerle açıkla.
 
 ## 1. Örnek senaryoyu karşılaştır
 
