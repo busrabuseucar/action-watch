@@ -122,3 +122,7 @@ scripts/           Build, portable source ZIP and asset checks
 Personal portfolio project for **Büşra Buse Uçar**. No AI model is used at runtime.
 
 This is a bounded monitoring MVP. It does not start, cancel or retry workflows; edit repositories; authenticate users; access private repositories; process raw logs; send alerts; watch in the background; or claim real-time synchronization. MIT license.
+
+## İşletim
+
+[İşletim ve sürüm doğrulama](docs/OPERATIONS.md) — kurulum, veri saklama, yayın, geri dönüş ve doğrulama kapsamı.
