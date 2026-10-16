@@ -1,5 +1,11 @@
 # ActionWatch
 
+## Canlı demonun kapsamı
+
+[Demoyu aç](https://action-watch-buse.sleek-brush-8818.chatgpt.site)
+
+GitHub modu herkese açık depoların gerçek Actions verisini salt okunur olarak alır. Örnek modu kurgusal kayıtlar kullanır ve GitHub isteği yapmaz. Özel depo erişimi sunulmaz.
+
 [![ActionWatch checks](https://github.com/busrabuseucar/action-watch/actions/workflows/ci.yml/badge.svg)](https://github.com/busrabuseucar/action-watch/actions/workflows/ci.yml)
 
 A read-only GitHub Actions dashboard for public repositories, built with **TypeScript** and the GitHub REST API. Inspect recent runs, filter results and open the exact run attempt or failed job on GitHub.
