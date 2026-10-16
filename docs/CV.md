@@ -1,7 +1,7 @@
 # CV için örnek metin
 
 **ActionWatch — GitHub Actions Takip Paneli**  
-Kişisel proje · Yapay zekâ destekli geliştirme  
+Kişisel proje  
 TypeScript, GitHub REST API, asenkron JavaScript, Node.js, GitHub Actions
 
 - Açık GitHub depolarındaki son çalıştırmaları, iş ve test adımlarını inceleyen; sonuç, iş akışı ve dal filtreleri sunan MVP.
@@ -15,7 +15,7 @@ CV’yi PDF olarak kaydederken iki bağlantının da tıklanabildiğini kontrol 
 İngilizce kısa sürüm:
 
 **ActionWatch — GitHub Actions Dashboard**  
-Personal project · AI-assisted development  
+Personal project  
 TypeScript, GitHub REST API, async JavaScript, Node.js, GitHub Actions
 
 - Read-only MVP for inspecting recent public-repository workflow runs and job steps, with result, workflow and branch filters.
