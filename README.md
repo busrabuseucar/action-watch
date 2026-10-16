@@ -94,7 +94,7 @@ node examples/ci-lab.mjs broken  # expected exit 1
 node examples/ci-lab.mjs fixed   # expected exit 0
 ```
 
-The broken example incorrectly treats a cancelled run as success. It never changes application code, a deployed Site or another repository. Read [the learning guide](docs/LEARNING.md) before running the exercise. The app's bundled fictional scenario remains separate from real Actions history.
+The broken example incorrectly treats a cancelled run as success. It never changes application code, a deployed Site or another repository. Use the manually triggered workflow to compare the broken and fixed scenarios. The app's bundled fictional scenario remains separate from real Actions history.
 
 ## Project layout
 
@@ -108,7 +108,6 @@ public/            HTML shell, stylesheet and favicon
 tests/             Deterministic Node tests against compiled modules
 examples/          Isolated red/green learning exercise
 scripts/           Build, portable source ZIP and asset checks
-docs/              Learning and CV guidance
 ```
 
 `dist/` and `node_modules/` are generated and ignored by Git. The downloadable source ZIP contains TypeScript, assets, tests, docs and build instructions; it excludes Site identity, dependencies and generated build output. Run the local setup sequence after extracting it.
